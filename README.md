@@ -1,5 +1,7 @@
 # immut
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/phelmkamp/immut.svg)](https://pkg.go.dev/github.com/phelmkamp/immut)
+
 Immutable data structures for the Go language.
 
 ## Installation
@@ -18,8 +20,8 @@ import (
 
 	"github.com/phelmkamp/immut/romaps"
 	"github.com/phelmkamp/immut/roslices"
-	"golang.org/x/exp/maps"
-	"golang.org/x/exp/slices"
+	_ "golang.org/x/exp/maps"
+	_ "golang.org/x/exp/slices"
 )
 
 func main() {

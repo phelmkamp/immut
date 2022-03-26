@@ -4,6 +4,8 @@
 
 Immutable data structures for the Go language.
 
+Designed to be a drop-in replacement for [slices](https://pkg.go.dev/golang.org/x/exp/slices) and [maps](https://pkg.go.dev/golang.org/x/exp/maps) with all functions delegating to those packages.
+
 ## Installation
 
 ```bash

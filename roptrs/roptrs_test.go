@@ -27,7 +27,7 @@ func fn4(b roptrs.Ptr[big]) {
 }
 
 func fn5(b roptrs.Ptr[big]) {
-	b2 := roptrs.Clone(b)
+	b2 := b.Clone()
 	b2.e++
 	fmt.Println(b2)
 }

@@ -12,6 +12,6 @@ func Example() {
 	go func() {
 		ch <- 42
 	}()
-	fmt.Println(rochans.Receive(roch))
+	fmt.Println(roch.Receive())
 	// Output: 42
 }

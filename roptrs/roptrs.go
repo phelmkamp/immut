@@ -17,7 +17,7 @@ func Freeze[T any](p *T) Ptr[T] {
 }
 
 // Clone creates a copy of the underlying value and returns a mutable pointer to it.
-func Clone[T any](p Ptr[T]) *T {
+func (p Ptr[T]) Clone() *T {
 	p2 := *p.p
 	return &p2
 }

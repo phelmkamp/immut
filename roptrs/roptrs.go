@@ -7,6 +7,10 @@ type Ptr[T any] struct {
 	p *T
 }
 
+func (p Ptr[T]) IsNil() bool {
+	return p.p == nil
+}
+
 func (p Ptr[T]) String() string {
 	return fmt.Sprint(p.p)
 }

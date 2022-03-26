@@ -11,6 +11,18 @@ type Map[K comparable, V any] struct {
 	m map[K]V
 }
 
+func (m Map[K, V]) Index(k K) V {
+	return m.m[k]
+}
+
+func (m Map[K, V]) IsNil() bool {
+	return m.m == nil
+}
+
+func (m Map[K, V]) Len() int {
+	return len(m.m)
+}
+
 func (m Map[K, V]) String() string {
 	return fmt.Sprint(m.m)
 }
@@ -22,7 +34,7 @@ func Freeze[M ~map[K]V, K comparable, V any](m M) Map[K, V] {
 
 // Clone returns a mutable copy of m.  This is a shallow clone:
 // the new keys and values are set using ordinary assignment.
-func Clone[M ~map[K]V, K comparable, V any](m Map[K, V]) M {
+func Clone[K comparable, V any](m Map[K, V]) map[K]V {
 	return maps.Clone(m.m)
 }
 

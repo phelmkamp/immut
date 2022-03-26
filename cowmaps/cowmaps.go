@@ -24,7 +24,7 @@ func CopyOnWrite[K comparable, V any](m map[K]V) Map[K, V] {
 // Clear removes all entries from m, leaving it empty.
 // Note: The underlying map is cloned before the write-operation is performed.
 func Clear[K comparable, V any](m *Map[K, V]) {
-	m2 := romaps.Clone[map[K]V](m.RO)
+	m2 := romaps.Clone(m.RO)
 	maps.Clear(m2)
 	m.RO = romaps.Freeze(m2)
 }
@@ -33,8 +33,9 @@ func Clear[K comparable, V any](m *Map[K, V]) {
 // When a key in src is already present in dst,
 // the value in dst will be overwritten by the value associated
 // with the key in src.
+// Note: The underlying map is cloned before the write-operation is performed.
 func Copy[K comparable, V any](dst *Map[K, V], src romaps.Map[K, V]) {
-	m2 := romaps.Clone[map[K]V](dst.RO)
+	m2 := romaps.Clone(dst.RO)
 	romaps.Copy(m2, src)
 	dst.RO = romaps.Freeze(m2)
 }
@@ -42,7 +43,7 @@ func Copy[K comparable, V any](dst *Map[K, V], src romaps.Map[K, V]) {
 // DeleteFunc deletes any key/value pairs from m for which del returns true.
 // Note: The underlying map is cloned before the write-operation is performed.
 func DeleteFunc[K comparable, V any](m *Map[K, V], del func(K, V) bool) {
-	m2 := romaps.Clone[map[K]V](m.RO)
+	m2 := romaps.Clone(m.RO)
 	maps.DeleteFunc(m2, del)
 	m.RO = romaps.Freeze(m2)
 }

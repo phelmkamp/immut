@@ -57,7 +57,7 @@ func main() {
 	go func() {
 		ch <- 42
 	}()
-	fmt.Println(roch.Receive())
+	fmt.Println(roch.Recv())
 	//roch <- 7 // not allowed
 
 	// read-only pointers

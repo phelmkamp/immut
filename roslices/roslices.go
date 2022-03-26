@@ -12,6 +12,22 @@ type Slice[E any] struct {
 	s []E
 }
 
+func (s Slice[E]) Cap() int {
+	return cap(s.s)
+}
+
+func (s Slice[E]) Index(i int) E {
+	return s.s[i]
+}
+
+func (s Slice[E]) IsNil() bool {
+	return s.s == nil
+}
+
+func (s Slice[E]) Len() int {
+	return len(s.s)
+}
+
 func (s Slice[E]) String() string {
 	return fmt.Sprint(s.s)
 }

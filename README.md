@@ -20,7 +20,9 @@ package main
 import (
 	"fmt"
 
+	"github.com/phelmkamp/immut/rochans"
 	"github.com/phelmkamp/immut/romaps"
+	"github.com/phelmkamp/immut/roptrs"
 	"github.com/phelmkamp/immut/roslices"
 	_ "golang.org/x/exp/maps"
 	_ "golang.org/x/exp/slices"
@@ -34,5 +36,23 @@ func main() {
 	m := romaps.Freeze(map[string]int{"foo": 42, "bar": 7})
 	fmt.Println(romaps.Keys(m))
 	//maps.Clear(m) // not allowed
+
+	ch := make(chan int)
+	roch := rochans.Freeze(ch)
+	go func() {
+		ch <- 42
+	}()
+	fmt.Println(roch.Receive())
+	//roch <- 7 // not allowed
+
+	type big struct {
+		a, b, c, d, e int
+	}
+	b := big{1, 2, 3, 4, 5}
+	p := roptrs.Freeze(&b)
+	p2 := p.Clone()
+	p2.a = 42
+	fmt.Println(p, p2)
+	//p.a = 42 // not allowed
 }
 ```

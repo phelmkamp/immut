@@ -20,6 +20,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/phelmkamp/immut/cowmaps"
+	"github.com/phelmkamp/immut/cowslices"
 	"github.com/phelmkamp/immut/rochans"
 	"github.com/phelmkamp/immut/romaps"
 	"github.com/phelmkamp/immut/roptrs"
@@ -29,14 +31,27 @@ import (
 )
 
 func main() {
+	// read-only slices
 	s := roslices.Freeze([]int{1, 2, 3})
 	fmt.Println(roslices.IsSorted(s))
 	//slices.Sort(s) // not allowed
 
+	// copy-on-write slices
+	s2 := cowslices.CopyOnWrite([]int{2, 1, 3})
+	cowslices.Sort(&s2)
+	fmt.Println(s2)
+
+	// read-only maps
 	m := romaps.Freeze(map[string]int{"foo": 42, "bar": 7})
 	fmt.Println(romaps.Keys(m))
 	//maps.Clear(m) // not allowed
 
+	// copy-on-write maps
+	m2 := cowmaps.CopyOnWrite(map[string]int{"foo": 42, "bar": 7})
+	cowmaps.DeleteFunc(&m2, func(k string, v int) bool { return k == "foo" })
+	fmt.Println(m2)
+
+	// read-only channels
 	ch := make(chan int)
 	roch := rochans.Freeze(ch)
 	go func() {
@@ -45,6 +60,7 @@ func main() {
 	fmt.Println(roch.Receive())
 	//roch <- 7 // not allowed
 
+	// read-only pointers
 	type big struct {
 		a, b, c, d, e int
 	}

@@ -16,7 +16,7 @@ func Freeze[T any](ch chan T) Chan[T] {
 	return Chan[T]{ch: ch}
 }
 
-// Receive receives a values from the given channel.
+// Receive receives a value from the given channel.
 func (ch Chan[T]) Receive() T {
 	return <-ch.ch
 }

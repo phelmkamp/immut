@@ -2,6 +2,8 @@ package roptrs_test
 
 import (
 	"fmt"
+	"reflect"
+	"testing"
 
 	"github.com/phelmkamp/immut/roptrs"
 )
@@ -39,4 +41,106 @@ func Example() {
 	fmt.Println(p)
 	// Output: &{1 2 3 4 6}
 	// &{1 2 3 4 5}
+}
+
+func TestPtr_Clone(t *testing.T) {
+	type fields struct {
+		p *big
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   *big
+	}{
+		{
+			name: "nil",
+			fields: fields{
+				p: nil,
+			},
+			want: nil,
+		},
+		{
+			name: "non-nil",
+			fields: fields{
+				p: &big{1, 2, 3, 4, 5},
+			},
+			want: &big{1, 2, 3, 4, 5},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := roptrs.Freeze(tt.fields.p)
+			if got := p.Clone(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Clone() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestPtr_IsNil(t *testing.T) {
+	type fields struct {
+		p *big
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   bool
+	}{
+		{
+			name: "nil",
+			fields: fields{
+				p: nil,
+			},
+			want: true,
+		},
+		{
+			name: "non-nil",
+			fields: fields{
+				p: &big{},
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := roptrs.Freeze(tt.fields.p)
+			if got := p.IsNil(); got != tt.want {
+				t.Errorf("IsNil() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestPtr_String(t *testing.T) {
+	type fields struct {
+		p *big
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   string
+	}{
+		{
+			name: "nil",
+			fields: fields{
+				p: nil,
+			},
+			want: "<nil>",
+		},
+		{
+			name: "non-nil",
+			fields: fields{
+				p: &big{1, 2, 3, 4, 5},
+			},
+			want: "&{1 2 3 4 5}",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := roptrs.Freeze(tt.fields.p)
+			if got := p.String(); got != tt.want {
+				t.Errorf("String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }

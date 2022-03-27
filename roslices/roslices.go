@@ -12,22 +12,27 @@ type Slice[E any] struct {
 	s []E
 }
 
+// Cap returns the capacity.
 func (s Slice[E]) Cap() int {
 	return cap(s.s)
 }
 
+// Index returns the i'th element.
 func (s Slice[E]) Index(i int) E {
 	return s.s[i]
 }
 
+// IsNil reports whether the underlying slice is nil.
 func (s Slice[E]) IsNil() bool {
 	return s.s == nil
 }
 
+// Len returns the length.
 func (s Slice[E]) Len() int {
 	return len(s.s)
 }
 
+// String returns the underlying slice formatted as a string.
 func (s Slice[E]) String() string {
 	return fmt.Sprint(s.s)
 }

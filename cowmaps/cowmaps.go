@@ -12,6 +12,7 @@ type Map[K comparable, V any] struct {
 	RO romaps.Map[K, V] // wraps a read-only map
 }
 
+// String returns the underlying map formatted as a string.
 func (m Map[K, V]) String() string {
 	return fmt.Sprint(m.RO)
 }

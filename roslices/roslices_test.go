@@ -2,6 +2,7 @@ package roslices_test
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 
 	"github.com/phelmkamp/immut/roslices"
@@ -19,34 +20,217 @@ func Example() {
 	// Output: [2 1 3] [1 2 3]
 }
 
-func TestBinarySearchFunc(t *testing.T) {
-	ints := roslices.Freeze([]int{1, 2, 3})
-	got := roslices.BinarySearchFunc(ints, func(i int) bool {
-		return i == 3
-	})
-	if got != 2 {
-		t.Errorf("BinarySearchFunc() = %v, want %v", got, 2)
+func TestSlice_Cap(t *testing.T) {
+	type fields struct {
+		s []int
 	}
-
-	strings := roslices.Freeze([]string{"1", "2", "3"})
-	got = roslices.BinarySearchFunc(strings, func(s string) bool {
-		return s == "3"
-	})
-	if got != 2 {
-		t.Errorf("BinarySearchFunc() = %v, want %v", got, 2)
+	tests := []struct {
+		name   string
+		fields fields
+		want   int
+	}{
+		{
+			name: "nil",
+			fields: fields{
+				s: nil,
+			},
+			want: 0,
+		},
+		{
+			name: "empty",
+			fields: fields{
+				s: []int{},
+			},
+			want: 0,
+		},
+		{
+			name: "zero",
+			fields: fields{
+				s: make([]int, 0, 0),
+			},
+			want: 0,
+		},
+		{
+			name: "one",
+			fields: fields{
+				s: make([]int, 0, 1),
+			},
+			want: 1,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := roslices.Freeze(tt.fields.s)
+			if got := s.Cap(); got != tt.want {
+				t.Errorf("Cap() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestBinarySearch(t *testing.T) {
-	ints := roslices.Freeze([]int{1, 2, 3})
-	got := roslices.BinarySearch(ints, 3)
-	if got != 2 {
-		t.Errorf("BinarySearch() = %v, want %v", got, 2)
+func TestSlice_Index(t *testing.T) {
+	type fields struct {
+		s []string
 	}
+	type args struct {
+		i int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   string
+	}{
+		{
+			name: "0",
+			fields: fields{
+				s: []string{"0", "1"},
+			},
+			args: args{
+				i: 0,
+			},
+			want: "0",
+		},
+		{
+			name: "1",
+			fields: fields{
+				s: []string{"0", "1"},
+			},
+			args: args{
+				i: 1,
+			},
+			want: "1",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := roslices.Freeze(tt.fields.s)
+			if got := s.Index(tt.args.i); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Index() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 
-	//ifcs := roslices.Freeze([]interface{}{1, 2, 3})
-	//got := roslices.BinarySearch(ifcs, 3)
-	//if got != 2 {
-	//	t.Errorf("BinarySearch() = %v, want %v", got, 2)
-	//}
+func TestSlice_IsNil(t *testing.T) {
+	type fields struct {
+		s []float32
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   bool
+	}{
+		{
+			name: "nil",
+			fields: fields{
+				s: nil,
+			},
+			want: true,
+		},
+		{
+			name: "non-nil",
+			fields: fields{
+				s: make([]float32, 0),
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := roslices.Freeze(tt.fields.s)
+			if got := s.IsNil(); got != tt.want {
+				t.Errorf("IsNil() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSlice_Len(t *testing.T) {
+	type fields struct {
+		s []bool
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   int
+	}{
+		{
+			name: "nil",
+			fields: fields{
+				s: nil,
+			},
+			want: 0,
+		},
+		{
+			name: "empty",
+			fields: fields{
+				s: []bool{},
+			},
+			want: 0,
+		},
+		{
+			name: "one",
+			fields: fields{
+				s: make([]bool, 1),
+			},
+			want: 1,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := roslices.Freeze(tt.fields.s)
+			if got := s.Len(); got != tt.want {
+				t.Errorf("Len() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSlice_String(t *testing.T) {
+	type fields struct {
+		s []int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   string
+	}{
+		{
+			name: "nil",
+			fields: fields{
+				s: make([]int, 0),
+			},
+			want: "[]",
+		},
+		{
+			name: "empty",
+			fields: fields{
+				s: make([]int, 0),
+			},
+			want: "[]",
+		},
+		{
+			name: "one",
+			fields: fields{
+				s: []int{0},
+			},
+			want: "[0]",
+		},
+		{
+			name: "two",
+			fields: fields{
+				s: []int{0, 1},
+			},
+			want: "[0 1]",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := roslices.Freeze(tt.fields.s)
+			if got := s.String(); got != tt.want {
+				t.Errorf("String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }

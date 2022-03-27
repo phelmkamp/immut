@@ -13,6 +13,7 @@ type Slice[E any] struct {
 	RO roslices.Slice[E] // wraps a read-only slice
 }
 
+// String returns the underlying slice formatted as a string.
 func (s Slice[E]) String() string {
 	return fmt.Sprint(s.RO)
 }
@@ -71,6 +72,18 @@ func Delete[E any](s Slice[E], i, j int) Slice[E] {
 func Grow[E any](s Slice[E], n int) Slice[E] {
 	s2 := roslices.Clone(s.RO)
 	s2 = slices.Grow(s2, n)
+	s.RO = roslices.Freeze(s2)
+	return s
+}
+
+// Insert inserts the values v... into s at index i,
+// returning the modified slice.
+// In the returned slice r, r[i] == v[0].
+// Insert panics if i is out of range.
+// Note: The underlying slice is cloned before the write-operation is performed.
+func Insert[E any](s Slice[E], i int, v ...E) Slice[E] {
+	s2 := roslices.Clone(s.RO)
+	s2 = slices.Insert(s2, i, v...)
 	s.RO = roslices.Freeze(s2)
 	return s
 }

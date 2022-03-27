@@ -11,18 +11,25 @@ type Map[K comparable, V any] struct {
 	m map[K]V
 }
 
-func (m Map[K, V]) Index(k K) V {
-	return m.m[k]
+// Index returns the value associated with k.
+// The boolean value ok is true if the value v corresponds to a key found
+// in the map, false if it is a zero value because the key was not found.
+func (m Map[K, V]) Index(k K) (v V, ok bool) {
+	v, ok = m.m[k]
+	return
 }
 
+// IsNil reports whether the underlying map is nil.
 func (m Map[K, V]) IsNil() bool {
 	return m.m == nil
 }
 
+// Len returns the length.
 func (m Map[K, V]) Len() int {
 	return len(m.m)
 }
 
+// String returns the underlying map formatted as a string.
 func (m Map[K, V]) String() string {
 	return fmt.Sprint(m.m)
 }

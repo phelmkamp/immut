@@ -2,6 +2,7 @@
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/phelmkamp/immut.svg)](https://pkg.go.dev/github.com/phelmkamp/immut)
 [![Go Report Card](https://goreportcard.com/badge/github.com/phelmkamp/immut)](https://goreportcard.com/report/github.com/phelmkamp/immut)
+[![codecov](https://codecov.io/gh/phelmkamp/immut/branch/main/graph/badge.svg?token=79CVDP412S)](https://codecov.io/gh/phelmkamp/immut)
 
 Immutable data structures for the Go language.
 

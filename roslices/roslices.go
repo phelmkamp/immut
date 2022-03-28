@@ -42,25 +42,21 @@ func Freeze[E any](s []E) Slice[E] {
 	return Slice[E]{s: s}
 }
 
-// BinarySearch searches for target in a sorted slice and returns the smallest
-// index at which target is found. If the target is not found, the index at
-// which it could be inserted into the slice is returned; therefore, if the
-// intention is to find target itself a separate check for equality with the
-// element at the returned index is required.
-func BinarySearch[E constraints.Ordered](x Slice[E], target E) int {
+// BinarySearch searches for target in a sorted slice and returns the position
+// where target is found, or the position where target would appear in the
+// sort order; it also returns a bool saying whether the target is really found
+// in the slice. The slice must be sorted in increasing order.
+func BinarySearch[E constraints.Ordered](x Slice[E], target E) (int, bool) {
 	return slices.BinarySearch(x.s, target)
 }
 
-// BinarySearchFunc uses binary search to find and return the smallest index i
-// in [0, n) at which ok(i) is true, assuming that on the range [0, n),
-// ok(i) == true implies ok(i+1) == true. That is, BinarySearchFunc requires
-// that ok is false for some (possibly empty) prefix of the input range [0, n)
-// and then true for the (possibly empty) remainder; BinarySearchFunc returns
-// the first true index. If there is no such index, BinarySearchFunc returns n.
-// (Note that the "not found" return value is not -1 as in, for instance,
-// strings.Index.) Search calls ok(i) only for i in the range [0, n).
-func BinarySearchFunc[E any](s Slice[E], ok func(E) bool) int {
-	return slices.BinarySearchFunc(s.s, ok)
+// BinarySearchFunc works like BinarySearch, but uses a custom comparison
+// function. The slice must be sorted in increasing order, where "increasing" is
+// defined by cmp. cmp(a, b) is expected to return an integer comparing the two
+// parameters: 0 if a == b, a negative number if a < b and a positive number if
+// a > b.
+func BinarySearchFunc[E any](x Slice[E], target E, cmp func(E, E) int) (int, bool) {
+	return slices.BinarySearchFunc(x.s, target, cmp)
 }
 
 // Clone returns a mutable copy of the slice.

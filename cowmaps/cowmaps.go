@@ -23,10 +23,11 @@ func CopyOnWrite[K comparable, V any](m map[K]V) Map[K, V] {
 }
 
 // Clear removes all entries from m, leaving it empty.
-// Note: The underlying map is cloned before the write-operation is performed.
+// Note: The underlying map is reallocated before the write-operation is performed.
 func Clear[K comparable, V any](m *Map[K, V]) {
-	m2 := romaps.Clone(m.RO)
-	maps.Clear(m2)
+	// No need to clone just to clear.
+	// Preserve min capacity in case it matters.
+	m2 := make(map[K]V, m.RO.Len())
 	m.RO = romaps.Freeze(m2)
 }
 

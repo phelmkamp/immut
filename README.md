@@ -9,7 +9,7 @@ Immutable data structures for the Go language.
 Utilizes generics instead of reflection.
 All types are "reference" types; the underlying values are not reallocated unless clearly stated (e.g. clone, copy).
 
-Designed to be a drop-in replacement for [slices](https://pkg.go.dev/golang.org/x/exp/slices) and [maps](https://pkg.go.dev/golang.org/x/exp/maps) with all functions delegating to those packages.
+Designed to be a drop-in replacement for [slices](https://pkg.go.dev/golang.org/x/exp/slices) and [maps](https://pkg.go.dev/golang.org/x/exp/maps) with most functions delegating to those packages.
 
 ## Installation
 

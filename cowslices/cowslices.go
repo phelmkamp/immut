@@ -26,6 +26,10 @@ func CopyOnWrite[E any](s []E) Slice[E] {
 // Clip removes unused capacity from the slice, returning s[:len(s):len(s)].
 // Note: The underlying slice is cloned before the write-operation is performed.
 func Clip[E any](s Slice[E]) Slice[E] {
+	// Avoid clone if no unused capacity to remove.
+	if s.RO.Cap() == s.RO.Len() {
+		return s
+	}
 	s2 := roslices.Clone(s.RO)
 	s2 = slices.Clip(s2)
 	s.RO = roslices.Freeze(s2)
@@ -70,6 +74,10 @@ func Delete[E any](s Slice[E], i, j int) Slice[E] {
 // allocate the memory, Grow panics.
 // Note: The underlying slice is cloned before the write-operation is performed.
 func Grow[E any](s Slice[E], n int) Slice[E] {
+	// Avoid clone if capacity is already sufficient.
+	if s.RO.Cap() >= s.RO.Len()+n {
+		return s
+	}
 	s2 := roslices.Clone(s.RO)
 	s2 = slices.Grow(s2, n)
 	s.RO = roslices.Freeze(s2)
@@ -91,6 +99,10 @@ func Insert[E any](s Slice[E], i int, v ...E) Slice[E] {
 // Sort sorts a slice of any ordered type in ascending order.
 // Note: The underlying slice is cloned before the write-operation is performed.
 func Sort[E constraints.Ordered](x *Slice[E]) {
+	// Avoid clone if already sorted.
+	if roslices.IsSorted(x.RO) {
+		return
+	}
 	s2 := roslices.Clone(x.RO)
 	slices.Sort(s2)
 	x.RO = roslices.Freeze(s2)
@@ -100,6 +112,10 @@ func Sort[E constraints.Ordered](x *Slice[E]) {
 // This sort is not guaranteed to be stable.
 // Note: The underlying slice is cloned before the write-operation is performed.
 func SortFunc[E any](x *Slice[E], less func(a, b E) bool) {
+	// Avoid clone if already sorted.
+	if roslices.IsSortedFunc(x.RO, less) {
+		return
+	}
 	s2 := roslices.Clone(x.RO)
 	slices.SortFunc(s2, less)
 	x.RO = roslices.Freeze(s2)
@@ -109,6 +125,10 @@ func SortFunc[E any](x *Slice[E], less func(a, b E) bool) {
 // elements, using less to compare elements.
 // Note: The underlying slice is cloned before the write-operation is performed.
 func SortStableFunc[E any](x *Slice[E], less func(a, b E) bool) {
+	// Avoid clone if already sorted.
+	if roslices.IsSortedFunc(x.RO, less) {
+		return
+	}
 	s2 := roslices.Clone(x.RO)
 	slices.SortStableFunc(s2, less)
 	x.RO = roslices.Freeze(s2)

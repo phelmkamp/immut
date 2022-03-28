@@ -383,7 +383,7 @@ func TestIntSorts(t *testing.T) {
 // The following is a benchmark for sorting strings.
 
 // makeRandomStrings generates n random strings with alphabetic runes of
-// varying lenghts.
+// varying lengths.
 func makeRandomStrings(n int) []string {
 	rand.Seed(42)
 	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")

@@ -1,6 +1,7 @@
 # immut
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/phelmkamp/immut.svg)](https://pkg.go.dev/github.com/phelmkamp/immut)
+[![Go Report Card](https://goreportcard.com/badge/github.com/phelmkamp/immut)](https://goreportcard.com/report/github.com/phelmkamp/immut)
 
 Immutable data structures for the Go language.
 
@@ -75,3 +76,9 @@ func main() {
 	//p.a = 42 // not allowed
 }
 ```
+
+## Releases
+
+This module strives to maintain compatibility with packages currently in [exp](https://pkg.go.dev/golang.org/x/exp).
+As such, it will remain untagged until the corresponding packages are tagged.
+Then, it will remain at v0.x.x until the corresponding packages achieve v1.x.x status.

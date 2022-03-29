@@ -32,6 +32,12 @@ func (s Slice[E]) Len() int {
 	return len(s.s)
 }
 
+// Slice returns s[i:j].
+// It panics if the indexes are out of bounds.
+func (s Slice[E]) Slice(i, j int) Slice[E] {
+	return Freeze(s.s[i:j])
+}
+
 // String returns the underlying slice formatted as a string.
 func (s Slice[E]) String() string {
 	return fmt.Sprint(s.s)
@@ -91,6 +97,14 @@ func CompareFunc[E1 any, E2 any](s1 Slice[E1], s2 Slice[E2], cmp func(E1, E2) in
 // Contains reports whether v is present in s.
 func Contains[E comparable](s Slice[E], v E) bool {
 	return slices.Contains(s.s, v)
+}
+
+// Copy copies elements from a source slice into a
+// destination slice. The source and destination may overlap. Copy
+// returns the number of elements copied, which will be the minimum of
+// len(src) and len(dst).
+func Copy[E any](dst []E, src Slice[E]) int {
+	return copy(dst, src.s)
 }
 
 // Equal reports whether two slices are equal: the same length and all

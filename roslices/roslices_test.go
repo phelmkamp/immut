@@ -234,3 +234,95 @@ func TestSlice_String(t *testing.T) {
 		})
 	}
 }
+
+func TestSlice_Slice(t *testing.T) {
+	ints := []int{0, 1, 2}
+
+	type fields struct {
+		s []int
+	}
+	type args struct {
+		i int
+		j int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   roslices.Slice[int]
+	}{
+		{
+			name: "nil",
+			fields: fields{
+				s: nil,
+			},
+			args: args{
+				i: 0,
+				j: 0,
+			},
+			want: roslices.Freeze[int](nil),
+		},
+		{
+			name: "empty",
+			fields: fields{
+				s: make([]int, 0),
+			},
+			args: args{
+				i: 0,
+				j: 0,
+			},
+			want: roslices.Freeze([]int{}),
+		},
+		{
+			name: "0:2",
+			fields: fields{
+				s: []int{0, 1, 2},
+			},
+			args: args{
+				i: 0,
+				j: 2,
+			},
+			want: roslices.Freeze(ints[0:2]),
+		},
+		{
+			name: "1:3",
+			fields: fields{
+				s: []int{0, 1, 2},
+			},
+			args: args{
+				i: 1,
+				j: 3,
+			},
+			want: roslices.Freeze(ints[1:3]),
+		},
+		{
+			name: "0:3",
+			fields: fields{
+				s: []int{0, 1, 2},
+			},
+			args: args{
+				i: 0,
+				j: 3,
+			},
+			want: roslices.Freeze(ints[0:3]),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := roslices.Freeze(tt.fields.s)
+			if got := s.Slice(tt.args.i, tt.args.j); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Slice() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestCopy(t *testing.T) {
+	ints := []int{0, 1}
+	wantS := make([]int, len(ints))
+	wantN := copy(wantS, ints)
+	gotS := make([]int, len(ints))
+	if gotN := roslices.Copy(gotS, roslices.Freeze(ints)); gotN != wantN || !reflect.DeepEqual(gotS, wantS) {
+		t.Errorf("Copy() = %v %v, want %v %v", gotS, gotN, wantS, wantN)
+	}
+}

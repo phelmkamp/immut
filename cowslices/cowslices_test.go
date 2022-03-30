@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/phelmkamp/immut/cowslices"
 	"github.com/phelmkamp/immut/roslices"
-	"math/rand"
 	"testing"
 	"time"
 )
@@ -21,16 +20,23 @@ func Example() {
 	// [2 1 3]
 }
 
+func makeInts(n int) []int {
+	ints := make([]int, n)
+	for i := 0; i < n; i++ {
+		ints[i] = i
+	}
+	return ints
+}
+
 // Example_concurrent demonstrates that two concurrent goroutines
 // can access the same slice without the use of channels or locks.
 func Example_concurrent() {
-	rand.Seed(42)
-	s := cowslices.CopyOnWrite([]int{0, 1, 2, 3, 4})
+	s := cowslices.CopyOnWrite(makeInts(10_000))
 	go func() {
 		for {
-			// delete 2nd element every 400 ms
-			time.Sleep(400 * time.Millisecond)
-			s = cowslices.Delete(s, 2, 3)
+			// delete element 1 after slight delay
+			time.Sleep(1 * time.Millisecond)
+			s = cowslices.Delete(s, 1, 2)
 		}
 	}()
 	go func() {
@@ -39,14 +45,38 @@ func Example_concurrent() {
 			// without COW index out-of-bounds is possible
 			// but ro is guaranteed not to change
 			ro := s.RO
-			_ = ro.Index(ro.Len() - 1)
+			_ = fmt.Sprint(ro.Index(ro.Len() - 1))
 		}
 	}()
-	// run for 1 sec
-	time.Sleep(1 * time.Second)
-	fmt.Println(s)
-	// Output: [0 1 4]
+	// run for 5 sec
+	time.Sleep(5 * time.Second)
+	fmt.Println(s.RO.Index(0))
+	// Output: 0
 }
+
+// Example_concurrent_mutable is Example_concurrent written with regular slices.
+// Uncomment and run to observe panic when reading slice.
+//func Example_concurrent_mutable() {
+//	s := makeInts(10_000)
+//	go func() {
+//		for {
+//			// delete element 1 after slight delay
+//			time.Sleep(1 * time.Millisecond)
+//			s = append(s[:1], s[2:]...)
+//		}
+//	}()
+//	go func() {
+//		for {
+//			// read last element constantly
+//			// without COW index out-of-bounds is possible
+//			_ = fmt.Sprint(s[len(s)-1])
+//		}
+//	}()
+//	// run for 5 sec
+//	time.Sleep(5 * time.Second)
+//	fmt.Println(s[0])
+//	// Output: 0
+//}
 
 func TestSlice_String(t *testing.T) {
 	type fields struct {

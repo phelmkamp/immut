@@ -28,11 +28,11 @@ func Example_concurrent() {
 	s := cowslices.CopyOnWrite([]int{})
 	go func() {
 		for {
-			// append random int every 1 sec
-			time.Sleep(1 * time.Second)
+			// append random int every 1/2 sec
+			time.Sleep(time.Second / 2)
 			v := rand.Intn(10)
 			s = cowslices.Insert(s, s.RO.Len(), v)
-			fmt.Println("slice after append: ", s)
+
 		}
 	}()
 	go func() {
@@ -40,34 +40,12 @@ func Example_concurrent() {
 			// sort slice every 1/3 sec
 			time.Sleep(time.Second / 3)
 			cowslices.Sort(&s)
-			fmt.Println("slice after sort:   ", s)
 		}
 	}()
-	// run for 6 sec
-	time.Sleep(6 * time.Second)
-	// Output:
-	// slice after sort:    []
-	// slice after sort:    []
-	// slice after append:  [5]
-	// slice after sort:    [5]
-	// slice after sort:    [5]
-	// slice after sort:    [5]
-	// slice after append:  [5 7]
-	// slice after sort:    [5 7]
-	// slice after sort:    [5 7]
-	// slice after sort:    [5 7]
-	// slice after append:  [5 7 8]
-	// slice after sort:    [5 7 8]
-	// slice after sort:    [5 7 8]
-	// slice after sort:    [5 7 8]
-	// slice after append:  [5 7 8 0]
-	// slice after sort:    [0 5 7 8]
-	// slice after sort:    [0 5 7 8]
-	// slice after sort:    [0 5 7 8]
-	// slice after append:  [0 5 7 8 3]
-	// slice after sort:    [0 3 5 7 8]
-	// slice after sort:    [0 3 5 7 8]
-	// slice after sort:    [0 3 5 7 8]
+	// run for 3 sec
+	time.Sleep(3 * time.Second)
+	fmt.Println(s)
+	// Output: [0 3 5 7 8]
 }
 
 func TestSlice_String(t *testing.T) {

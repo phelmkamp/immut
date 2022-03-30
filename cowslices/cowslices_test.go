@@ -22,30 +22,30 @@ func Example() {
 }
 
 // Example_concurrent demonstrates that two concurrent goroutines
-// can write to the same slice without the use of channels or locks.
+// can access the same slice without the use of channels or locks.
 func Example_concurrent() {
 	rand.Seed(42)
-	s := cowslices.CopyOnWrite([]int{})
+	s := cowslices.CopyOnWrite([]int{0, 1, 2, 3, 4})
 	go func() {
 		for {
-			// append random int every 1/2 sec
-			time.Sleep(time.Second / 2)
-			v := rand.Intn(10)
-			s = cowslices.Insert(s, s.RO.Len(), v)
-
+			// delete 2nd element every 400 ms
+			time.Sleep(400 * time.Millisecond)
+			s = cowslices.Delete(s, 2, 3)
 		}
 	}()
 	go func() {
 		for {
-			// sort slice every 1/3 sec
-			time.Sleep(time.Second / 3)
-			cowslices.Sort(&s)
+			// read last element constantly
+			// without COW index out-of-bounds is possible
+			// but ro is guaranteed not to change
+			ro := s.RO
+			_ = ro.Index(ro.Len() - 1)
 		}
 	}()
-	// run for 3 sec
-	time.Sleep(3 * time.Second)
+	// run for 1 sec
+	time.Sleep(1 * time.Second)
 	fmt.Println(s)
-	// Output: [0 3 5 7 8]
+	// Output: [0 1 4]
 }
 
 func TestSlice_String(t *testing.T) {

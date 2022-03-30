@@ -2,10 +2,11 @@ package cowslices_test
 
 import (
 	"fmt"
-	"testing"
-
 	"github.com/phelmkamp/immut/cowslices"
 	"github.com/phelmkamp/immut/roslices"
+	"math/rand"
+	"testing"
+	"time"
 )
 
 func Example() {
@@ -18,6 +19,55 @@ func Example() {
 	fmt.Println(ints1)
 	// Output: [1 2 3]
 	// [2 1 3]
+}
+
+// Example_concurrent demonstrates that two concurrent goroutines
+// can write to the same slice without the use of channels or locks.
+func Example_concurrent() {
+	rand.Seed(42)
+	s := cowslices.CopyOnWrite([]int{})
+	go func() {
+		for {
+			// append random int every 1 sec
+			time.Sleep(1 * time.Second)
+			v := rand.Intn(10)
+			s = cowslices.Insert(s, s.RO.Len(), v)
+			fmt.Println("slice after append: ", s)
+		}
+	}()
+	go func() {
+		for {
+			// sort slice every 1/3 sec
+			time.Sleep(time.Second / 3)
+			cowslices.Sort(&s)
+			fmt.Println("slice after sort:   ", s)
+		}
+	}()
+	// run for 6 sec
+	time.Sleep(6 * time.Second)
+	// Output:
+	// slice after sort:    []
+	// slice after sort:    []
+	// slice after append:  [5]
+	// slice after sort:    [5]
+	// slice after sort:    [5]
+	// slice after sort:    [5]
+	// slice after append:  [5 7]
+	// slice after sort:    [5 7]
+	// slice after sort:    [5 7]
+	// slice after sort:    [5 7]
+	// slice after append:  [5 7 8]
+	// slice after sort:    [5 7 8]
+	// slice after sort:    [5 7 8]
+	// slice after sort:    [5 7 8]
+	// slice after append:  [5 7 8 0]
+	// slice after sort:    [0 5 7 8]
+	// slice after sort:    [0 5 7 8]
+	// slice after sort:    [0 5 7 8]
+	// slice after append:  [0 5 7 8 3]
+	// slice after sort:    [0 3 5 7 8]
+	// slice after sort:    [0 3 5 7 8]
+	// slice after sort:    [0 3 5 7 8]
 }
 
 func TestSlice_String(t *testing.T) {

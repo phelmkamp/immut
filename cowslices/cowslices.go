@@ -40,6 +40,10 @@ func Clip[E any](s Slice[E]) Slice[E] {
 // This is like the uniq command found on Unix.
 // Note: The underlying slice is cloned before the write-operation is performed.
 func Compact[E comparable](s Slice[E]) Slice[E] {
+	// Avoid clone if already compact.
+	if isCompact(s) {
+		return s
+	}
 	s2 := roslices.Clone(s.RO)
 	s2 = slices.Compact(s2)
 	s.RO = roslices.Freeze(s2)
@@ -49,6 +53,10 @@ func Compact[E comparable](s Slice[E]) Slice[E] {
 // CompactFunc is like Compact but uses a comparison function.
 // Note: The underlying slice is cloned before the write-operation is performed.
 func CompactFunc[E any](s Slice[E], eq func(E, E) bool) Slice[E] {
+	// Avoid clone if already compact.
+	if isCompactFunc(s, eq) {
+		return s
+	}
 	s2 := roslices.Clone(s.RO)
 	s2 = slices.CompactFunc(s2, eq)
 	s.RO = roslices.Freeze(s2)
@@ -132,4 +140,22 @@ func SortStableFunc[E any](x *Slice[E], less func(a, b E) bool) {
 	s2 := roslices.Clone(x.RO)
 	slices.SortStableFunc(s2, less)
 	x.RO = roslices.Freeze(s2)
+}
+
+func isCompact[E comparable](s Slice[E]) bool {
+	for i := 1; i < s.RO.Len(); i++ {
+		if s.RO.Index(i) == s.RO.Index(i-1) {
+			return false
+		}
+	}
+	return true
+}
+
+func isCompactFunc[E any](s Slice[E], eq func(E, E) bool) bool {
+	for i := 1; i < s.RO.Len(); i++ {
+		if eq(s.RO.Index(i), s.RO.Index(i-1)) {
+			return false
+		}
+	}
+	return true
 }

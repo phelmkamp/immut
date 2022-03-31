@@ -50,8 +50,7 @@ func Example_concurrent() {
 	}()
 	// run for 5 sec
 	time.Sleep(5 * time.Second)
-	fmt.Println(s.RO.Index(0))
-	// Output: 0
+	// Output:
 }
 
 // Example_concurrent_mutable is Example_concurrent written with regular slices.
@@ -74,8 +73,7 @@ func Example_concurrent() {
 //	}()
 //	// run for 5 sec
 //	time.Sleep(5 * time.Second)
-//	fmt.Println(s[0])
-//	// Output: 0
+//	// Output:
 //}
 
 func TestSlice_String(t *testing.T) {

@@ -2,7 +2,10 @@ package cowmaps_test
 
 import (
 	"fmt"
+	"math/rand"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/phelmkamp/immut/cowmaps"
 	"github.com/phelmkamp/immut/romaps"
@@ -17,6 +20,80 @@ func Example() {
 	// Output: map[bar:7 fiz:3 foo:42]
 	// map[fiz:3]
 }
+
+func makeMap(n int) map[string]*int {
+	rand.Seed(42)
+	m := make(map[string]*int, n)
+	for i := 0; i < n; i++ {
+		v := rand.Intn(n)
+		m[strconv.Itoa(v)] = &v
+	}
+	return m
+}
+
+// Example_concurrent demonstrates that two concurrent goroutines
+// can access the same map without the use of channels or locks.
+func Example_concurrent() {
+	m := cowmaps.CopyOnWrite(makeMap(5_000))
+	go func() {
+		for {
+			// delete 1 pair after slight delay
+			time.Sleep(1 * time.Millisecond)
+			first := true
+			cowmaps.DeleteFunc(&m, func(string, *int) bool {
+				del := first
+				first = false
+				return del
+			})
+		}
+	}()
+	go func() {
+		for {
+			// read all pairs constantly
+			// without COW panic is possible
+			// but ro is guaranteed not to change
+			ro := m.RO
+			for _, k := range romaps.Keys(ro) {
+				v, _ := ro.Index(k)
+				_ = fmt.Sprint(*v)
+			}
+		}
+	}()
+	// run for 1 sec
+	time.Sleep(1 * time.Second)
+	// Output:
+}
+
+// Example_concurrent_mutable is Example_concurrent written with regular maps.
+// Uncomment and run to observe panic when reading map.
+//func Example_concurrent_mutable() {
+//	m := makeMap(5_000)
+//	go func() {
+//		for {
+//			// delete 1 pair after slight delay
+//			time.Sleep(1 * time.Millisecond)
+//			first := true
+//			maps.DeleteFunc(m, func(string, *int) bool {
+//				del := first
+//				first = false
+//				return del
+//			})
+//		}
+//	}()
+//	go func() {
+//		for {
+//			// read all pairs constantly
+//			// without COW panic is possible
+//			for _, k := range maps.Keys(m) {
+//				v, _ := m[k]
+//				_ = fmt.Sprint(*v)
+//			}
+//		}
+//	}()
+//	// run for 1 sec
+//	time.Sleep(1 * time.Second)
+//	// Output:
+//}
 
 func TestMap_String(t *testing.T) {
 	type fields struct {

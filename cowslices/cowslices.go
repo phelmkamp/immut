@@ -27,7 +27,7 @@ func CopyOnWrite[E any](s []E) Slice[E] {
 // Note: The underlying slice is cloned before the write-operation is performed.
 func Clip[E any](s Slice[E]) Slice[E] {
 	// Avoid clone if no unused capacity to remove.
-	if s.RO.Cap() == s.RO.Len() {
+	if ro := s.RO; ro.Cap() == ro.Len() {
 		return s
 	}
 	s2 := roslices.Clone(s.RO)
@@ -41,7 +41,7 @@ func Clip[E any](s Slice[E]) Slice[E] {
 // Note: The underlying slice is cloned before the write-operation is performed.
 func Compact[E comparable](s Slice[E]) Slice[E] {
 	// Avoid clone if already compact.
-	if isCompact(s) {
+	if isCompact(s.RO) {
 		return s
 	}
 	s2 := roslices.Clone(s.RO)
@@ -54,7 +54,7 @@ func Compact[E comparable](s Slice[E]) Slice[E] {
 // Note: The underlying slice is cloned before the write-operation is performed.
 func CompactFunc[E any](s Slice[E], eq func(E, E) bool) Slice[E] {
 	// Avoid clone if already compact.
-	if isCompactFunc(s, eq) {
+	if isCompactFunc(s.RO, eq) {
 		return s
 	}
 	s2 := roslices.Clone(s.RO)
@@ -83,11 +83,13 @@ func Delete[E any](s Slice[E], i, j int) Slice[E] {
 // Note: The underlying slice is cloned before the write-operation is performed.
 func Grow[E any](s Slice[E], n int) Slice[E] {
 	// Avoid clone if capacity is already sufficient.
-	if s.RO.Cap() >= s.RO.Len()+n {
+	ro := s.RO
+	cap2 := ro.Len() + n
+	if ro.Cap() >= cap2 {
 		return s
 	}
-	s2 := roslices.Clone(s.RO)
-	s2 = slices.Grow(s2, n)
+	// Reallocate just once with enough capacity.
+	s2 := grow(ro, cap2)
 	s.RO = roslices.Freeze(s2)
 	return s
 }
@@ -98,7 +100,13 @@ func Grow[E any](s Slice[E], n int) Slice[E] {
 // Insert panics if i is out of range.
 // Note: The underlying slice is cloned before the write-operation is performed.
 func Insert[E any](s Slice[E], i int, v ...E) Slice[E] {
-	s2 := roslices.Clone(s.RO)
+	// Reallocate just once with enough capacity.
+	ro := s.RO
+	cap2 := ro.Cap()
+	if tot := ro.Len() + len(v); tot > cap2 {
+		cap2 = tot
+	}
+	s2 := grow(ro, cap2)
 	s2 = slices.Insert(s2, i, v...)
 	s.RO = roslices.Freeze(s2)
 	return s
@@ -142,20 +150,26 @@ func SortStableFunc[E any](x *Slice[E], less func(a, b E) bool) {
 	x.RO = roslices.Freeze(s2)
 }
 
-func isCompact[E comparable](s Slice[E]) bool {
-	for i := 1; i < s.RO.Len(); i++ {
-		if s.RO.Index(i) == s.RO.Index(i-1) {
+func isCompact[E comparable](s roslices.Slice[E]) bool {
+	for i := 1; i < s.Len(); i++ {
+		if s.Index(i) == s.Index(i-1) {
 			return false
 		}
 	}
 	return true
 }
 
-func isCompactFunc[E any](s Slice[E], eq func(E, E) bool) bool {
-	for i := 1; i < s.RO.Len(); i++ {
-		if eq(s.RO.Index(i), s.RO.Index(i-1)) {
+func isCompactFunc[E any](s roslices.Slice[E], eq func(E, E) bool) bool {
+	for i := 1; i < s.Len(); i++ {
+		if eq(s.Index(i), s.Index(i-1)) {
 			return false
 		}
 	}
 	return true
+}
+
+func grow[E any](ro roslices.Slice[E], n int) []E {
+	s2 := make([]E, ro.Len(), n)
+	roslices.Copy(s2, ro)
+	return s2
 }

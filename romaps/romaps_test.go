@@ -1,6 +1,7 @@
 package romaps_test
 
 import (
+	"context"
 	"fmt"
 	"reflect"
 	"testing"
@@ -16,6 +17,24 @@ func Example() {
 	fmt.Println(m2)
 	// Output: 2
 	// map[bar:7 fiz:3 foo:42]
+}
+
+// Example_context demonstrates that a read-only Map can be used
+// as a value in context.Context.
+func Example_context() {
+	type ctxKey string
+	cfgKey := ctxKey("cfg")
+	ctx := context.WithValue(context.Background(), cfgKey, romaps.Freeze(map[string]string{
+		"foo": "42",
+		"bar": "baz",
+	}))
+
+	cfg, _ := ctx.Value(cfgKey).(romaps.Map[string, string])
+	if !cfg.IsNil() {
+		v, _ := cfg.Index("foo")
+		fmt.Println(v)
+	}
+	// Output: 42
 }
 
 func TestMap_Index(t *testing.T) {

@@ -2,7 +2,6 @@ package cowmaps_test
 
 import (
 	"fmt"
-	"golang.org/x/exp/maps"
 	"math/rand"
 	"strconv"
 	"testing"
@@ -65,32 +64,32 @@ func Example_concurrent() {
 
 // Example_concurrent_mutable is Example_concurrent written with regular maps.
 // Uncomment and run to observe panic when reading map.
-func Example_concurrent_mutable() {
-	m := makeMap(5_000)
-	go func() {
-		for {
-			// delete 1 pair after slight delay
-			time.Sleep(1 * time.Millisecond)
-			kDel := maps.Keys(m)[0]
-			maps.DeleteFunc(m, func(k string, v *int) bool {
-				return k == kDel
-			})
-		}
-	}()
-	go func() {
-		for {
-			// read all pairs constantly
-			// without COW panic is possible
-			for _, k := range maps.Keys(m) {
-				v, _ := m[k]
-				_ = fmt.Sprint(*v)
-			}
-		}
-	}()
-	// run for 1 sec
-	time.Sleep(1 * time.Second)
-	// Output:
-}
+//func Example_concurrent_mutable() {
+//	m := makeMap(5_000)
+//	go func() {
+//		for {
+//			// delete 1 pair after slight delay
+//			time.Sleep(1 * time.Millisecond)
+//			kDel := maps.Keys(m)[0]
+//			maps.DeleteFunc(m, func(k string, v *int) bool {
+//				return k == kDel
+//			})
+//		}
+//	}()
+//	go func() {
+//		for {
+//			// read all pairs constantly
+//			// without COW panic is possible
+//			for _, k := range maps.Keys(m) {
+//				v, _ := m[k]
+//				_ = fmt.Sprint(*v)
+//			}
+//		}
+//	}()
+//	// run for 1 sec
+//	time.Sleep(1 * time.Second)
+//	// Output:
+//}
 
 func TestMap_String(t *testing.T) {
 	type fields struct {

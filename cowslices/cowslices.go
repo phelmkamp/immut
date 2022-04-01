@@ -89,7 +89,7 @@ func Grow[E any](s Slice[E], n int) Slice[E] {
 		return s
 	}
 	// Reallocate just once with enough capacity.
-	s2 := grow(ro, cap2)
+	s2 := clone(ro, cap2)
 	s.RO = roslices.Freeze(s2)
 	return s
 }
@@ -106,7 +106,7 @@ func Insert[E any](s Slice[E], i int, v ...E) Slice[E] {
 	if tot := ro.Len() + len(v); tot > cap2 {
 		cap2 = tot
 	}
-	s2 := grow(ro, cap2)
+	s2 := clone(ro, cap2)
 	s2 = slices.Insert(s2, i, v...)
 	s.RO = roslices.Freeze(s2)
 	return s
@@ -168,8 +168,8 @@ func isCompactFunc[E any](s roslices.Slice[E], eq func(E, E) bool) bool {
 	return true
 }
 
-func grow[E any](ro roslices.Slice[E], n int) []E {
-	s2 := make([]E, ro.Len(), n)
+func clone[E any](ro roslices.Slice[E], cap int) []E {
+	s2 := make([]E, ro.Len(), cap)
 	roslices.Copy(s2, ro)
 	return s2
 }

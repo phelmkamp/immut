@@ -83,3 +83,24 @@ func main() {
 This module strives to maintain compatibility with packages currently in [exp](https://pkg.go.dev/golang.org/x/exp).
 As such, it will remain untagged until the corresponding packages are tagged.
 Then, it will remain at v0.x.x until the corresponding packages achieve v1.x.x status.
+
+## Packages
+
+### roslices
+
+Package roslices defines various read-only functions useful with immutable slices of any type.
+
+#### Performance
+
+The compiler can inline almost all function calls as verified by `Testinline` in the `test` submodule.
+Exceptions:
+  * `roslices.IndexFunc`
+    * The underlying call to `slices.IndexFunc` is inlined but the resulting code prevents `roslices.IndexFunc` from being inlined.
+
+### romaps
+
+Package romaps defines various read-only functions useful with immutable maps of any type.
+
+#### Performance
+
+The compiler can inline all function calls as verified by `Testinline` in the `test` submodule.

@@ -26,3 +26,7 @@ jobs:
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
+
+    - name: Test Submodule
+      working-directory: ./test
+      run: go test -v ./...

@@ -334,7 +334,7 @@ func TestClip(t *testing.T) {
 }
 
 // These benchmarks compare sorting a large slice of int with sort.Ints vs.
-// slices.Sort
+// Sort
 func makeRandomInts(n int) []int {
 	rand.Seed(42)
 	ints := make([]int, n)

@@ -1,10 +1,24 @@
 package cowslices_test
 
 import (
+	"fmt"
 	"github.com/phelmkamp/immut/cowslices"
 	"reflect"
 	"testing"
 )
+
+func ExampleDoAll() {
+	s := cowslices.CopyOnWrite([]int{1, 2, 2, 3})
+	s = cowslices.DoAll(s, s.RO.Len(),
+		cowslices.DoInsert[int](1, 3), // [1 3 2 2 3]
+		cowslices.DoSort[int](),       // [1 2 2 3 3]
+		cowslices.DoCompact[int](),    // [1 2 3]
+		cowslices.DoDelete[int](1, 2), // [1 3]
+		cowslices.DoClip[int](),       // [1 3]
+	)
+	fmt.Println(s)
+	// Output: [1 3]
+}
 
 func TestDoAll(t *testing.T) {
 	s1 := cowslices.CopyOnWrite([]int{1, 2, 2, 3})

@@ -84,23 +84,14 @@ This module strives to maintain compatibility with packages currently in [exp](h
 As such, it will remain untagged until the corresponding packages are tagged.
 Then, it will remain at v0.x.x until the corresponding packages achieve v1.x.x status.
 
-## Packages
+## Performance
 
-### roslices
+This project aims to be a low/zero-cost abstraction of Go's standard types.
+The compiler can inline almost all read-only function calls as verified by `Test_inline` in the `test` submodule.
 
-Package roslices defines various read-only functions useful with immutable slices of any type.
-
-#### Performance
-
-The compiler can inline almost all function calls as verified by `Testinline` in the `test` submodule.
 Exceptions:
   * `roslices.IndexFunc`
-    * The underlying call to `slices.IndexFunc` is inlined but the resulting code prevents `roslices.IndexFunc` from being inlined.
 
-### romaps
-
-Package romaps defines various read-only functions useful with immutable maps of any type.
-
-#### Performance
-
-The compiler can inline all function calls as verified by `Testinline` in the `test` submodule.
+The copy-on-write functions avoid unnecessary reallocation wherever possible.
+As such, most of the copy-on-write functions cannot be inlined by the compiler but that is a conscious tradeoff.
+The `cowslices.DoAll` function is provided to support multiple write-operations with minimal reallocation.

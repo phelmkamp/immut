@@ -5,7 +5,7 @@
 [![codecov](https://codecov.io/gh/phelmkamp/immut/branch/main/graph/badge.svg?token=79CVDP412S)](https://codecov.io/gh/phelmkamp/immut)
 
 In Go, immutability is limited to primitive types and structs (via the `const` keyword and pass-by-value respectively).
-This module provides read-only slices, maps, and pointers via the low/zero-cost abstractions `roslices.Slice`, `romaps.Map`, and `corptrs.Ptr`.
+This module provides read-only slices, maps, and pointers via the zero-cost abstractions `roslices.Slice`, `romaps.Map`, and `corptrs.Ptr`.
 Go 1.18+ parameterized types (AKA generics) are used to support any underlying type.
 
 In addition, the `cowslices` and `cowmaps` packages provide copy-on-write semantics. The mutating functions clone the underlying value before the write-operation is performed
@@ -86,9 +86,8 @@ Then, it will remain at v0 until the corresponding packages achieve v1 status.
 
 ## Performance
 
-This project aims to be a low/zero-cost abstraction of Go's standard types.
-The compiler can inline almost all read-only function calls as verified by `Test_inline` in the `test` submodule.
- * Exceptions: `roslices.IndexFunc`
+This project aims to be a zero-cost abstraction of Go's standard types.
+The compiler can inline all read-only function calls as verified by `Test_inline` in the `test` submodule.
 
 The copy-on-write functions avoid unnecessary reallocation wherever possible.
 As such, most of the copy-on-write functions cannot be inlined by the compiler but that is a conscious tradeoff.

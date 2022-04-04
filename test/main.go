@@ -1,11 +1,10 @@
 package main
 
 import (
+	"github.com/phelmkamp/immut/corptrs"
 	"github.com/phelmkamp/immut/cowmaps"
 	"github.com/phelmkamp/immut/cowslices"
-	"github.com/phelmkamp/immut/rochans"
 	"github.com/phelmkamp/immut/romaps"
-	"github.com/phelmkamp/immut/roptrs"
 	"github.com/phelmkamp/immut/roslices"
 )
 
@@ -66,18 +65,9 @@ func main() {
 	cowmaps.Copy(&cm, m)
 	cowmaps.DeleteFunc(&cm, func(uint8, struct{}) bool { return false })
 
-	// roptrs
-	p := roptrs.Freeze(&struct{}{})
+	// corptrs
+	p := corptrs.Freeze(&struct{}{})
 	p.IsNil()
 	p.Clone()
 	p.String()
-
-	// rochans
-	ch := make(chan struct{})
-	close(ch)
-	roch := rochans.Freeze(ch)
-	roch.Cap()
-	roch.IsNil()
-	roch.Len()
-	roch.Recv()
 }

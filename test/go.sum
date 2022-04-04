@@ -1,4 +1,4 @@
-github.com/phelmkamp/immut v0.0.0-20220404025320-a5cc119378aa h1:h2Uevf9iwNKAjtT2yRtPCMnvsF63XYTQ0BJ3mt/ezaQ=
-github.com/phelmkamp/immut v0.0.0-20220404025320-a5cc119378aa/go.mod h1:4Yp9+VrDtD8uWJKK2aegDH7dfYGOzv6e+QvaQogMyWo=
+github.com/phelmkamp/immut v0.0.0-20220404190837-363cb9a158f0 h1:KXubOLZ+LfjiPzGi+UFhkPMS2n17ftlyJ4bnjbUevSY=
+github.com/phelmkamp/immut v0.0.0-20220404190837-363cb9a158f0/go.mod h1:4Yp9+VrDtD8uWJKK2aegDH7dfYGOzv6e+QvaQogMyWo=
 golang.org/x/exp v0.0.0-20220328175248-053ad81199eb h1:pC9Okm6BVmxEw76PUu0XUbOTQ92JX11hfvqTjAV3qxM=
 golang.org/x/exp v0.0.0-20220328175248-053ad81199eb/go.mod h1:lgLbSvA5ygNOMpwM/9anMpWVlVJ7Z+cHWq/eFuinpGE=

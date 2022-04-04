@@ -134,7 +134,13 @@ func Index[E comparable](s Slice[E], v E) int {
 // IndexFunc returns the first index i satisfying f(s[i]),
 // or -1 if none do.
 func IndexFunc[E any](s Slice[E], f func(E) bool) int {
-	return slices.IndexFunc(s.s, f)
+	// Manually inline slices.IndexFunc so this function can be inlined by the compiler.
+	for i, v := range s.s {
+		if f(v) {
+			return i
+		}
+	}
+	return -1
 }
 
 // IsSorted reports whether x is sorted in ascending order.

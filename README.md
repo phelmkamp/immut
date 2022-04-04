@@ -12,6 +12,14 @@ In addition, the `cowslices` and `cowmaps` packages provide copy-on-write semant
 
 The `*slices` and `*maps` packages are drop-in replacements for the standard [slices](https://pkg.go.dev/golang.org/x/exp/slices) and [maps](https://pkg.go.dev/golang.org/x/exp/maps) packages.
 
+Note: This project is not intended to replace all uses of slices, maps, and pointers with unnecessary boxed-types. It is specifically for restricting write-access to values of these types in cases where it is desirable to do so.
+For example:
+ * Ensure return values cannot be modified (previously required a defensive copy)
+ * Guarantee to callers that function arguments will not change
+ * Safely access shared state from multiple goroutines (e.g. values in `context.Context`)
+ * Prevent mutation of variables/fields after initialization
+
+
 ## Installation
 
 ```bash
@@ -28,7 +36,6 @@ import (
 
 	"github.com/phelmkamp/immut/cowmaps"
 	"github.com/phelmkamp/immut/cowslices"
-	"github.com/phelmkamp/immut/rochans"
 	"github.com/phelmkamp/immut/romaps"
 	"github.com/phelmkamp/immut/roptrs"
 	"github.com/phelmkamp/immut/roslices"

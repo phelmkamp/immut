@@ -42,6 +42,7 @@ func Test_inline(t *testing.T) {
 		//`inlining call to cowslices\.Clip`:           {},
 		//`inlining call to cowslices\.Compact`:        {},
 		//`inlining call to cowslices\.CompactFunc`:    {},
+		//`inlining call to cowslices\.DoAll`:          {},
 		//`inlining call to cowslices\.Grow`:           {},
 		//`inlining call to cowslices\.Insert`:         {},
 		//`inlining call to cowslices\.Sort`:           {},
@@ -95,7 +96,7 @@ func Test_inline(t *testing.T) {
 	for pattern := range want {
 		matched, err := regexp.MatchString(pattern, output)
 		if err != nil {
-			t.Fatalf("regexp.MatchString(_, %s) failed: %v", pattern, err)
+			t.Fatalf("regexp.MatchString(%s) failed: %v", pattern, err)
 		}
 		if matched {
 			fmt.Printf("found pattern: %s\n", pattern)

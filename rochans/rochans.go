@@ -3,6 +3,8 @@ package rochans
 import "fmt"
 
 // Chan wraps a read-only channel.
+//
+// Deprecated: use <-chan T instead.
 type Chan[T any] struct {
 	ch chan T
 }
@@ -37,6 +39,8 @@ func (ch Chan[T]) String() string {
 }
 
 // Freeze returns a read-only wrapper for the given channel.
+//
+// Deprecated: use <-chan T instead.
 func Freeze[T any](ch chan T) Chan[T] {
 	return Chan[T]{ch: ch}
 }

@@ -4,12 +4,13 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/phelmkamp/immut)](https://goreportcard.com/report/github.com/phelmkamp/immut)
 [![codecov](https://codecov.io/gh/phelmkamp/immut/branch/main/graph/badge.svg?token=79CVDP412S)](https://codecov.io/gh/phelmkamp/immut)
 
-Immutable data structures for the Go language.
+In Go, immutability is limited to primitive types and structs (via the `const` keyword and pass-by-value respectively).
+This module provides read-only slices, maps, and pointers via the low/zero-cost abstractions `roslices.Slice`, `romaps.Map`, and `roptrs.Ptr`.
+Go 1.18+ parameterized types (AKA generics) are used to support any underlying type.
 
-Utilizes generics instead of reflection.
-All types are "reference" types; the underlying values are not reallocated unless clearly stated (e.g. clone, copy).
+In addition, the `cowslices` and `cowmaps` packages provide copy-on-write semantics. The mutating functions clone the underlying value before the write-operation is performed
 
-Designed to be a drop-in replacement for [slices](https://pkg.go.dev/golang.org/x/exp/slices) and [maps](https://pkg.go.dev/golang.org/x/exp/maps) with most functions delegating to those packages.
+The `*slices` and `*maps` packages are drop-in replacements for the standard [slices](https://pkg.go.dev/golang.org/x/exp/slices) and [maps](https://pkg.go.dev/golang.org/x/exp/maps) packages.
 
 ## Installation
 
@@ -31,8 +32,8 @@ import (
 	"github.com/phelmkamp/immut/romaps"
 	"github.com/phelmkamp/immut/roptrs"
 	"github.com/phelmkamp/immut/roslices"
-	_ "golang.org/x/exp/maps"
-	_ "golang.org/x/exp/slices"
+	//"golang.org/x/exp/maps"
+	//"golang.org/x/exp/slices"
 )
 
 func main() {
@@ -56,15 +57,6 @@ func main() {
 	cowmaps.DeleteFunc(&m2, func(k string, v int) bool { return k == "foo" })
 	fmt.Println(m2)
 
-	// read-only channels
-	ch := make(chan int)
-	roch := rochans.Freeze(ch)
-	go func() {
-		ch <- 42
-	}()
-	fmt.Println(roch.Recv())
-	//roch <- 7 // not allowed
-
 	// read-only pointers
 	type big struct {
 		a, b, c, d, e int
@@ -82,15 +74,13 @@ func main() {
 
 This module strives to maintain compatibility with packages currently in [exp](https://pkg.go.dev/golang.org/x/exp).
 As such, it will remain untagged until the corresponding packages are tagged.
-Then, it will remain at v0.x.x until the corresponding packages achieve v1.x.x status.
+Then, it will remain at v0 until the corresponding packages achieve v1 status.
 
 ## Performance
 
 This project aims to be a low/zero-cost abstraction of Go's standard types.
 The compiler can inline almost all read-only function calls as verified by `Test_inline` in the `test` submodule.
-
-Exceptions:
-  * `roslices.IndexFunc`
+ * Exceptions: `roslices.IndexFunc`
 
 The copy-on-write functions avoid unnecessary reallocation wherever possible.
 As such, most of the copy-on-write functions cannot be inlined by the compiler but that is a conscious tradeoff.

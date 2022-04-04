@@ -39,6 +39,7 @@ func main() {
 	cowslices.Compact(cs)
 	cowslices.CompactFunc(cs, func(uint8, uint8) bool { return true })
 	cowslices.Delete(cs, 0, 1)
+	cowslices.DoAll(cs, -1, cowslices.DoSort[uint8]())
 	cowslices.Grow(cs, 1)
 	cowslices.Insert(cs, 0, 0)
 	cowslices.Sort(&cs)

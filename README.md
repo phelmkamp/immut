@@ -5,7 +5,7 @@
 [![codecov](https://codecov.io/gh/phelmkamp/immut/branch/main/graph/badge.svg?token=79CVDP412S)](https://codecov.io/gh/phelmkamp/immut)
 
 In Go, immutability is limited to primitive types and structs (via the `const` keyword and pass-by-value respectively).
-This module provides read-only slices, maps, and pointers via the low/zero-cost abstractions `roslices.Slice`, `romaps.Map`, and `roptrs.Ptr`.
+This module provides read-only slices, maps, and pointers via the low/zero-cost abstractions `roslices.Slice`, `romaps.Map`, and `corptrs.Ptr`.
 Go 1.18+ parameterized types (AKA generics) are used to support any underlying type.
 
 In addition, the `cowslices` and `cowmaps` packages provide copy-on-write semantics. The mutating functions clone the underlying value before the write-operation is performed
@@ -18,6 +18,7 @@ For example:
  * Guarantee to callers that function arguments will not change
  * Safely access shared state from multiple goroutines (e.g. values in `context.Context`)
  * Prevent mutation of variables/fields after initialization
+ * Pass pointers to large structs and avoid excess copying without the risk of modification
 
 
 ## Installation
@@ -37,7 +38,7 @@ import (
 	"github.com/phelmkamp/immut/cowmaps"
 	"github.com/phelmkamp/immut/cowslices"
 	"github.com/phelmkamp/immut/romaps"
-	"github.com/phelmkamp/immut/roptrs"
+	"github.com/phelmkamp/immut/corptrs"
 	"github.com/phelmkamp/immut/roslices"
 	//"golang.org/x/exp/maps"
 	//"golang.org/x/exp/slices"
@@ -69,7 +70,7 @@ func main() {
 		a, b, c, d, e int
 	}
 	b := big{1, 2, 3, 4, 5}
-	p := roptrs.Freeze(&b)
+	p := corptrs.Freeze(&b)
 	p2 := p.Clone()
 	p2.a = 42
 	fmt.Println(p, p2)

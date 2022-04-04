@@ -71,18 +71,11 @@ func Test_inline(t *testing.T) {
 		// avoiding excess reallocation is more important anyway
 		//`inlining call to cowmaps\.DeleteFunc`: {},
 
-		// roptrs
-		`inlining call to roptrs\.Freeze`:                               {},
-		`inlining call to roptrs\.Ptr\[go.shape.struct {}_0]\.IsNil()`:  {},
-		`inlining call to roptrs\.Ptr\[go.shape.struct {}_0]\.Clone()`:  {},
-		`inlining call to roptrs\.Ptr\[go.shape.struct {}_0]\.String()`: {},
-
-		// rochans
-		`inlining call to rochans\.Freeze`:                                {},
-		`inlining call to rochans\.Chan\[go.shape.struct {}_0]\.Cap()`:    {},
-		`inlining call to rochans\.Chan\[go.shape.struct {}_0]\.IsNil()`:  {},
-		`inlining call to rochans\.Chan\[go.shape.struct {}_0]\.Len()`:    {},
-		`inlining call to rochans\.Chan\[go.shape.struct {}_0]\.String()`: {},
+		// corptrs
+		`inlining call to corptrs\.Freeze`:                               {},
+		`inlining call to corptrs\.Ptr\[go.shape.struct {}_0]\.IsNil()`:  {},
+		`inlining call to corptrs\.Ptr\[go.shape.struct {}_0]\.Clone()`:  {},
+		`inlining call to corptrs\.Ptr\[go.shape.struct {}_0]\.String()`: {},
 	}
 
 	var sb strings.Builder

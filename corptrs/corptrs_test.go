@@ -1,34 +1,34 @@
-package roptrs_test
+package corptrs_test
 
 import (
 	"fmt"
 	"reflect"
 	"testing"
 
-	"github.com/phelmkamp/immut/roptrs"
+	"github.com/phelmkamp/immut/corptrs"
 )
 
 type big struct {
 	a, b, c, d, e int
 }
 
-func fn1(b roptrs.Ptr[big]) {
+func fn1(b corptrs.Ptr[big]) {
 	fn2(b)
 }
 
-func fn2(b roptrs.Ptr[big]) {
+func fn2(b corptrs.Ptr[big]) {
 	fn3(b)
 }
 
-func fn3(b roptrs.Ptr[big]) {
+func fn3(b corptrs.Ptr[big]) {
 	fn4(b)
 }
 
-func fn4(b roptrs.Ptr[big]) {
+func fn4(b corptrs.Ptr[big]) {
 	fn5(b)
 }
 
-func fn5(b roptrs.Ptr[big]) {
+func fn5(b corptrs.Ptr[big]) {
 	b2 := b.Clone()
 	b2.e++
 	fmt.Println(b2)
@@ -36,7 +36,7 @@ func fn5(b roptrs.Ptr[big]) {
 
 func Example() {
 	b := big{1, 2, 3, 4, 5}
-	p := roptrs.Freeze(&b)
+	p := corptrs.Freeze(&b)
 	fn1(p)
 	fmt.Println(p)
 	// Output: &{1 2 3 4 6}
@@ -69,7 +69,7 @@ func TestPtr_Clone(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := roptrs.Freeze(tt.fields.p)
+			p := corptrs.Freeze(tt.fields.p)
 			if got := p.Clone(); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Clone() = %v, want %v", got, tt.want)
 			}
@@ -103,7 +103,7 @@ func TestPtr_IsNil(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := roptrs.Freeze(tt.fields.p)
+			p := corptrs.Freeze(tt.fields.p)
 			if got := p.IsNil(); got != tt.want {
 				t.Errorf("IsNil() = %v, want %v", got, tt.want)
 			}
@@ -137,7 +137,7 @@ func TestPtr_String(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := roptrs.Freeze(tt.fields.p)
+			p := corptrs.Freeze(tt.fields.p)
 			if got := p.String(); got != tt.want {
 				t.Errorf("String() = %v, want %v", got, tt.want)
 			}

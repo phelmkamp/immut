@@ -1,4 +1,4 @@
-package roptrs
+package corptrs
 
 import "fmt"
 

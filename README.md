@@ -5,11 +5,11 @@
 [![codecov](https://codecov.io/gh/phelmkamp/immut/branch/main/graph/badge.svg?token=79CVDP412S)](https://codecov.io/gh/phelmkamp/immut)
 
 In Go, immutability is limited to primitive types and structs (via the `const` keyword and pass-by-value respectively).
-This module provides read-only slices, maps, and pointers via the generic types [`roslices.Slice`](roslices/roslices.go),
-[`romaps.Map`](romaps/romaps.go), and [`corptrs.Ptr`](corptrs/corptrs.go).
+This module provides read-only slices, maps, and pointers via the generic types [`roslices.Slice`](https://pkg.go.dev/github.com/phelmkamp/immut/roslices),
+[`romaps.Map`](https://pkg.go.dev/github.com/phelmkamp/immut/romaps), and [`corptrs.Ptr`](https://pkg.go.dev/github.com/phelmkamp/immut/corptrs).
 These types may be considered "zero-cost abstractions" because the underlying value is not copied.
 
-In addition, the [`cowslices`](cowslices/cowslices.go) and [`cowmaps`](cowmaps/cowmaps.go)
+In addition, the [`cowslices`](https://pkg.go.dev/github.com/phelmkamp/immut/cowslices) and [`cowmaps`](https://pkg.go.dev/github.com/phelmkamp/immut/cowmaps)
 packages provide copy-on-write semantics. The mutating functions seamlessly clone the underlying value before the write-operation is performed
 
 The `*slices` and `*maps` packages are drop-in replacements for the standard [slices](https://pkg.go.dev/golang.org/x/exp/slices) and 
@@ -92,8 +92,8 @@ Then, it will remain at v0 until the corresponding packages achieve v1 status.
 This project aims to be a zero-cost abstraction of Go's standard types.
 The Go compiler avoids excess function calls by copying simple function bodies to the call-site through a process called
 [inlining](https://dave.cheney.net/2020/04/25/inlining-optimisations-in-go). 
-[`Test_inline`](test/main_test.go) verifies that the compiler can inline all the read-only functions in this module.
+`Test_inline` verifies that the compiler can inline all the read-only functions in this module.
 
 The copy-on-write functions avoid unnecessary reallocation wherever possible.
-The `cowslices.DoAll` function is provided to support multiple write-operations with minimal reallocation.
+The [`cowslices.DoAll`](https://pkg.go.dev/github.com/phelmkamp/immut/cowslices#DoAll) function is provided to support multiple write-operations with minimal reallocation.
 Because of extra checks to avoid copying, most of the copy-on-write functions cannot be inlined by the compiler but that is a conscious tradeoff.

@@ -6,7 +6,7 @@
 
 In Go, immutability is limited to primitive types and structs (via the `const` keyword and pass-by-value respectively).
 This module provides read-only slices, maps, and pointers via the generic types [`roslices.Slice`](https://pkg.go.dev/github.com/phelmkamp/immut/roslices),
-[`romaps.Map`](https://pkg.go.dev/github.com/phelmkamp/immut/romaps), and [`corptrs.Ptr`](https://pkg.go.dev/github.com/phelmkamp/immut/corptrs).
+[`romaps.Map`](https://pkg.go.dev/github.com/phelmkamp/immut/romaps), and [`corptrs.Pointer`](https://pkg.go.dev/github.com/phelmkamp/immut/corptrs).
 These types may be considered "zero-cost abstractions" because the underlying value is not copied.
 
 In addition, the [`cowslices`](https://pkg.go.dev/github.com/phelmkamp/immut/cowslices) and [`cowmaps`](https://pkg.go.dev/github.com/phelmkamp/immut/cowmaps)

@@ -67,11 +67,10 @@ func DeleteFunc[K comparable, V any](m *Map[K, V], del func(K, V) bool) {
 }
 
 func containsFunc[K comparable, V any](m romaps.Map[K, V], f func(K, V) bool) bool {
-	for _, k := range romaps.Keys(m) {
-		v, _ := m.Index(k)
-		if f(k, v) {
-			return true
-		}
-	}
-	return false
+	var found bool
+	m.Do(func(k K, v V) bool {
+		found = f(k, v)
+		return !found
+	})
+	return found
 }

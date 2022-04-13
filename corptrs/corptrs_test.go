@@ -16,23 +16,23 @@ type big struct {
 	a, b, c, d, e int
 }
 
-func fn1(b corptrs.Ptr[big]) {
+func fn1(b corptrs.Pointer[big]) {
 	fn2(b)
 }
 
-func fn2(b corptrs.Ptr[big]) {
+func fn2(b corptrs.Pointer[big]) {
 	fn3(b)
 }
 
-func fn3(b corptrs.Ptr[big]) {
+func fn3(b corptrs.Pointer[big]) {
 	fn4(b)
 }
 
-func fn4(b corptrs.Ptr[big]) {
+func fn4(b corptrs.Pointer[big]) {
 	fn5(b)
 }
 
-func fn5(b corptrs.Ptr[big]) {
+func fn5(b corptrs.Pointer[big]) {
 	b2 := b.Clone()
 	b2.e++
 	fmt.Println(b2)
@@ -47,7 +47,7 @@ func Example() {
 	// &{1 2 3 4 5}
 }
 
-func TestPtr_Clone(t *testing.T) {
+func TestPointer_Clone(t *testing.T) {
 	type fields struct {
 		p *big
 	}
@@ -81,7 +81,7 @@ func TestPtr_Clone(t *testing.T) {
 	}
 }
 
-func TestPtr_IsNil(t *testing.T) {
+func TestPointer_IsNil(t *testing.T) {
 	type fields struct {
 		p *big
 	}
@@ -115,7 +115,7 @@ func TestPtr_IsNil(t *testing.T) {
 	}
 }
 
-func TestPtr_String(t *testing.T) {
+func TestPointer_String(t *testing.T) {
 	type fields struct {
 		p *big
 	}

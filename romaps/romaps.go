@@ -15,6 +15,16 @@ type Map[K comparable, V any] struct {
 	m map[K]V
 }
 
+// Do calls f on every pair, stopping if f returns false.
+// f will be called on values in an indeterminate order.
+func (m Map[K, V]) Do(f func(k K, v V) bool) {
+	for k, v := range m.m {
+		if !f(k, v) {
+			return
+		}
+	}
+}
+
 // Index returns the value associated with k.
 // The boolean value ok is true if the value v corresponds to a key found
 // in the map, false if it is a zero value because the key was not found.

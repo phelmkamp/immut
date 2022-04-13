@@ -54,6 +54,7 @@ func Test_inline(t *testing.T) {
 
 		// romaps
 		`inlining call to romaps\.Freeze`:                                             {},
+		`inlining call to romaps\.Map\[go.shape.uint8_0,go.shape.struct {}_1].Do`:     {},
 		`inlining call to romaps\.Map\[go.shape.uint8_0,go.shape.struct {}_1].Index`:  {},
 		`inlining call to romaps\.Map\[go.shape.uint8_0,go.shape.struct {}_1].IsNil`:  {},
 		`inlining call to romaps\.Map\[go.shape.uint8_0,go.shape.struct {}_1].Len`:    {},

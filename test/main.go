@@ -51,6 +51,7 @@ func main() {
 
 	// romaps
 	m := romaps.Freeze(map[uint8]struct{}{})
+	m.Do(func(uint8, struct{}) bool { return false })
 	m.Index(0)
 	m.IsNil()
 	m.Len()

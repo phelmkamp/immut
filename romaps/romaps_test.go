@@ -218,3 +218,22 @@ func TestMap_String(t *testing.T) {
 		})
 	}
 }
+
+func TestMap_Do(t *testing.T) {
+	m := romaps.Freeze(map[int]uint8{0: 1, 1: 2, 3: 4})
+	var n uint8
+	count := func(int, uint8) { n++ }
+	m.Do(doN(count, 2))
+	if n != 2 {
+		t.Errorf("count after Do() = %v, want %v", n, 3)
+	}
+	n = 0
+	m.Do(doN(count, 4))
+	if n != 3 {
+		t.Errorf("count after Do() = %v, want %v", n, 7)
+	}
+}
+
+func doN(f func(int, uint8), n int) func(int, uint8) bool {
+	return func(k int, v uint8) bool { f(k, v); n--; return n > 0 }
+}

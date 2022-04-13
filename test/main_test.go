@@ -75,10 +75,10 @@ func Test_inline(t *testing.T) {
 		//`inlining call to cowmaps\.DeleteFunc`: {},
 
 		// corptrs
-		`inlining call to corptrs\.Freeze`:                               {},
-		`inlining call to corptrs\.Ptr\[go.shape.struct {}_0]\.IsNil()`:  {},
-		`inlining call to corptrs\.Ptr\[go.shape.struct {}_0]\.Clone()`:  {},
-		`inlining call to corptrs\.Ptr\[go.shape.struct {}_0]\.String()`: {},
+		`inlining call to corptrs\.Freeze`:                                   {},
+		`inlining call to corptrs\.Pointer\[go.shape.struct {}_0]\.IsNil()`:  {},
+		`inlining call to corptrs\.Pointer\[go.shape.struct {}_0]\.Clone()`:  {},
+		`inlining call to corptrs\.Pointer\[go.shape.struct {}_0]\.String()`: {},
 	}
 
 	var sb strings.Builder

@@ -28,10 +28,6 @@ jobs:
       working-directory: ./cowmaps
       run: go test . -bench . -benchmem
 
-    - name: Bench cowslices
-      working-directory: ./cowslices
-      run: go test . -bench . -benchmem
-
     - name: Bench romaps
       working-directory: ./romaps
       run: go test . -bench . -benchmem

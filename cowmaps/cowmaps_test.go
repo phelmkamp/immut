@@ -7,6 +7,7 @@ package cowmaps_test
 import (
 	"fmt"
 	"math/rand"
+	"reflect"
 	"strconv"
 	"testing"
 	"time"
@@ -133,5 +134,33 @@ func TestMap_String(t *testing.T) {
 				t.Errorf("String() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestMap_Delete(t *testing.T) {
+	m := cowmaps.CopyOnWrite(map[int]int{1: 1, 2: 2})
+	if v, ok := m.Delete(-1); v != 0 || ok {
+		t.Errorf("Delete() = %v %v, want %v %v", v, ok, -1, false)
+	}
+	if !reflect.DeepEqual(m, cowmaps.CopyOnWrite(map[int]int{1: 1, 2: 2})) {
+		t.Errorf("m after Delete() = %v, want %v", m, cowmaps.CopyOnWrite(map[int]int{1: 1, 2: 2}))
+	}
+	if v, ok := m.Delete(1); v != 1 || !ok {
+		t.Errorf("Delete() = %v %v, want %v %v", v, ok, 1, true)
+	}
+	if !reflect.DeepEqual(m, cowmaps.CopyOnWrite(map[int]int{2: 2})) {
+		t.Errorf("m after Delete() = %v, want %v", m, cowmaps.CopyOnWrite(map[int]int{2: 2}))
+	}
+}
+
+func TestMap_SetIndex(t *testing.T) {
+	m := cowmaps.CopyOnWrite(map[int]int{1: 1, 2: 2})
+	m.SetIndex(1, -1)
+	if !reflect.DeepEqual(m, cowmaps.CopyOnWrite(map[int]int{1: -1, 2: 2})) {
+		t.Errorf("m after SetIndex() = %v, want %v", m, cowmaps.CopyOnWrite(map[int]int{1: -1, 2: 2}))
+	}
+	m.SetIndex(3, 3)
+	if !reflect.DeepEqual(m, cowmaps.CopyOnWrite(map[int]int{1: -1, 2: 2, 3: 3})) {
+		t.Errorf("m after SetIndex() = %v, want %v", m, cowmaps.CopyOnWrite(map[int]int{1: -1, 2: 2, 3: 3}))
 	}
 }

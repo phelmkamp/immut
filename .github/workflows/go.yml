@@ -24,6 +24,22 @@ jobs:
     - name: Test
       run: go test -v ./... -covermode=count -coverprofile="coverage.out"
 
+    - name: Bench cowmaps
+      working-directory: ./cowmaps
+      run: go test . -bench . -benchmem
+
+    - name: Bench cowslices
+      working-directory: ./cowslices
+      run: go test . -bench . -benchmem
+
+    - name: Bench romaps
+      working-directory: ./romaps
+      run: go test . -bench . -benchmem
+
+    - name: Bench roslices
+      working-directory: ./roslices
+      run: go test . -bench . -benchmem
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
 

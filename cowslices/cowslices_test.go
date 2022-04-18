@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/phelmkamp/immut/cowslices"
 	"github.com/phelmkamp/immut/roslices"
+	"reflect"
 	"testing"
 	"time"
 )
@@ -125,5 +126,13 @@ func TestSlice_String(t *testing.T) {
 				t.Errorf("String() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestSlice_SetIndex(t *testing.T) {
+	s := cowslices.CopyOnWrite([]string{"f", "o", "e"})
+	s.SetIndex(2, "o")
+	if want := cowslices.CopyOnWrite([]string{"f", "o", "o"}); !reflect.DeepEqual(s, want) {
+		t.Errorf("s after SetIndex() = %v, want %v", s, want)
 	}
 }

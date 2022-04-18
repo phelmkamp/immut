@@ -17,6 +17,15 @@ type Slice[E any] struct {
 	RO roslices.Slice[E] // wraps a read-only slice
 }
 
+// SetIndex sets the element at i to v.
+// Note: The underlying slice is cloned before the write-operation is performed.
+func (s *Slice[E]) SetIndex(i int, v E) {
+	ro := s.RO
+	s2 := clone(ro, ro.Len()+1)
+	s2[i] = v
+	s.RO = roslices.Freeze(s2)
+}
+
 // String returns the underlying slice formatted as a string.
 func (s Slice[E]) String() string {
 	return fmt.Sprint(s.RO)

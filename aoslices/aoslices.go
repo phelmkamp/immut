@@ -65,11 +65,15 @@ func Make[E any](size ...int) Slice[E] {
 	}
 }
 
-// Append appends elements to the end of a slice. If
-// it has sufficient capacity, the destination is resliced to accommodate the
-// new elements. If it does not, a new underlying array will be allocated.
-func Append[E any](s Slice[E], v ...E) Slice[E] {
-	s.s = append(s.s, v...)
+// Insert inserts the values v... into s at index i,
+// returning the modified slice.
+// In the returned slice r, r[i] == v[0].
+// Insert panics if i != len(s).
+func Insert[E any](s Slice[E], i int, v ...E) Slice[E] {
+	if i < len(s.s) {
+		panic(fmt.Sprintf("aoslices.Insert: index %d prior to end of slice length %d", i, len(s.s)))
+	}
+	s.s = slices.Insert(s.s, i, v...)
 	return s
 }
 

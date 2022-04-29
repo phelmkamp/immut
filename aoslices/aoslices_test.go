@@ -335,13 +335,3 @@ func TestMake(t *testing.T) {
 		})
 	}
 }
-
-func TestAppend(t *testing.T) {
-	s := Slice[int]{}
-	if s = Append(s, 1); !reflect.DeepEqual(s, Slice[int]{s: []int{1}}) {
-		t.Errorf("Append() = %v, want %v", s, Slice[int]{s: []int{1}})
-	}
-	if s = Append(s, 2, 3); !reflect.DeepEqual(s, Slice[int]{s: []int{1, 2, 3}}) {
-		t.Errorf("Append() = %v, want %v", s, Slice[int]{s: []int{1, 2, 3}})
-	}
-}

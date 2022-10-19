@@ -1,5 +1,5 @@
 module github.com/phelmkamp/immut
 
-go 1.18
+go 1.19
 
-require golang.org/x/exp v0.0.0-20220428152302-39d4317da171
+require golang.org/x/exp v0.0.0-20221018221608-02f3b879a704

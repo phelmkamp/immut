@@ -92,7 +92,8 @@ Then, it will remain at v0 until the corresponding packages achieve v1 status.
 This project aims to be a zero-cost abstraction of Go's standard types.
 The Go compiler avoids excess function calls by copying simple function bodies to the call-site through a process called
 [inlining](https://dave.cheney.net/2020/04/25/inlining-optimisations-in-go). 
-`Test_inline` verifies that the compiler can inline all the read-only functions in this module.
+`Test_inline` verifies that the compiler can inline ~~all~~* many of the read-only functions in this module.
+ - *Go 1.19 regression to be restored in Go 1.20
 
 The copy-on-write functions avoid unnecessary reallocation wherever possible.
 The [`cowslices.DoAll`](https://pkg.go.dev/github.com/phelmkamp/immut/cowslices#DoAll) function is provided to support multiple write-operations with minimal reallocation.

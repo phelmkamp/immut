@@ -1,4 +1,4 @@
-// Copyright 2022 phelmkamp. All rights reserved.
+// Copyright 2023 phelmkamp. All rights reserved.
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
@@ -6,10 +6,11 @@ package cowslices
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/phelmkamp/immut/roslices"
 	"golang.org/x/exp/constraints"
-	"golang.org/x/exp/slices"
+	expslices "golang.org/x/exp/slices"
 )
 
 // Slice wraps a copy-on-write slice.
@@ -133,7 +134,7 @@ func Sort[E constraints.Ordered](x *Slice[E]) {
 		return
 	}
 	s2 := roslices.Clone(x.RO)
-	slices.Sort(s2)
+	expslices.Sort(s2)
 	x.RO = roslices.Freeze(s2)
 }
 
@@ -146,7 +147,7 @@ func SortFunc[E any](x *Slice[E], less func(a, b E) bool) {
 		return
 	}
 	s2 := roslices.Clone(x.RO)
-	slices.SortFunc(s2, less)
+	expslices.SortFunc(s2, less)
 	x.RO = roslices.Freeze(s2)
 }
 
@@ -159,7 +160,7 @@ func SortStableFunc[E any](x *Slice[E], less func(a, b E) bool) {
 		return
 	}
 	s2 := roslices.Clone(x.RO)
-	slices.SortStableFunc(s2, less)
+	expslices.SortStableFunc(s2, less)
 	x.RO = roslices.Freeze(s2)
 }
 

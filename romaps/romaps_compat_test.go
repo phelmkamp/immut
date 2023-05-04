@@ -6,11 +6,10 @@ package romaps
 
 import (
 	"math"
+	"slices"
 	"sort"
 	"strconv"
 	"testing"
-
-	"golang.org/x/exp/slices"
 )
 
 // copied from https://cs.opensource.google/go/x/exp/+/master:slices/

@@ -1,4 +1,4 @@
-// Copyright 2022 phelmkamp. All rights reserved.
+// Copyright 2023 phelmkamp. All rights reserved.
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/phelmkamp/immut/roslices"
-	"golang.org/x/exp/slices"
+	expslices "golang.org/x/exp/slices"
 )
 
 func Example() {
@@ -18,7 +18,7 @@ func Example() {
 	if !roslices.IsSorted(ints1) {
 		// must clone to sort
 		ints2 := roslices.Clone(ints1)
-		slices.Sort(ints2)
+		expslices.Sort(ints2)
 		fmt.Println(ints1, ints2)
 	}
 	// Output: [2 1 3] [1 2 3]

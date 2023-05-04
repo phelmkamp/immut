@@ -1,4 +1,4 @@
-// Copyright 2022 phelmkamp. All rights reserved.
+// Copyright 2023 phelmkamp. All rights reserved.
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
@@ -6,11 +6,12 @@ package cowslices_test
 
 import (
 	"fmt"
-	"github.com/phelmkamp/immut/cowslices"
-	"github.com/phelmkamp/immut/roslices"
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/phelmkamp/immut/cowslices"
+	"github.com/phelmkamp/immut/roslices"
 )
 
 func Example() {

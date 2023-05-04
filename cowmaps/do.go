@@ -1,8 +1,9 @@
 package cowmaps
 
 import (
+	"maps"
+
 	"github.com/phelmkamp/immut/romaps"
-	"golang.org/x/exp/maps"
 )
 
 // Doer defines a method for doing an operation on a map.

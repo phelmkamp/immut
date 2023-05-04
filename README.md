@@ -10,10 +10,10 @@ This module provides read-only slices, maps, and pointers via the generic types 
 These types may be considered "zero-cost abstractions" because the underlying value is not copied.
 
 In addition, the [`cowslices`](https://pkg.go.dev/github.com/phelmkamp/immut/cowslices) and [`cowmaps`](https://pkg.go.dev/github.com/phelmkamp/immut/cowmaps)
-packages provide copy-on-write semantics. The mutating functions seamlessly clone the underlying value before the write-operation is performed
+packages provide copy-on-write semantics. The mutating functions seamlessly clone the underlying value before the write-operation is performed.
 
-The `*slices` and `*maps` packages are drop-in replacements for the standard [slices](https://pkg.go.dev/golang.org/x/exp/slices) and 
-[maps](https://pkg.go.dev/golang.org/x/exp/maps) packages. In fact, the unit tests for those packages have been copied here to ensure compatibility.
+The `*slices` and `*maps` packages are drop-in replacements for the standard slices and 
+maps packages. In fact, the unit tests for those packages have been copied here to ensure compatibility.
 
 Note: This project is not intended to replace all uses of slices, maps, and pointers with unnecessary boxed-types. It is specifically for restricting write-access to values of these types in cases where it is desirable to do so.
 For example:
@@ -43,8 +43,6 @@ import (
 	"github.com/phelmkamp/immut/romaps"
 	"github.com/phelmkamp/immut/corptrs"
 	"github.com/phelmkamp/immut/roslices"
-	//"golang.org/x/exp/maps"
-	//"golang.org/x/exp/slices"
 )
 
 func main() {
@@ -93,8 +91,8 @@ This project aims to be a zero-cost abstraction of Go's standard types.
 The Go compiler avoids excess function calls by copying simple function bodies to the call-site through a process called
 [inlining](https://dave.cheney.net/2020/04/25/inlining-optimisations-in-go). 
 `Test_inline` verifies that the compiler can inline ~~all~~* many of the read-only functions in this module.
- - *Go 1.19 regression to be restored in Go 1.20
+ - *Go 1.19 regression to be restored in future
 
 The copy-on-write functions avoid unnecessary reallocation wherever possible.
 The [`cowslices.DoAll`](https://pkg.go.dev/github.com/phelmkamp/immut/cowslices#DoAll) function is provided to support multiple write-operations with minimal reallocation.
-Because of extra checks to avoid copying, most of the copy-on-write functions cannot be inlined by the compiler but that is a conscious tradeoff.
+Because of extra checks to avoid copying, most of the copy-on-write functions cannot be inlined by the compiler but that's a conscious tradeoff.

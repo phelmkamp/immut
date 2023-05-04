@@ -1,4 +1,4 @@
-// Copyright 2022 phelmkamp. All rights reserved.
+// Copyright 2023 phelmkamp. All rights reserved.
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 
@@ -6,9 +6,10 @@ package aoslices
 
 import (
 	"fmt"
+	"slices"
 
 	"golang.org/x/exp/constraints"
-	"golang.org/x/exp/slices"
+	expslices "golang.org/x/exp/slices"
 )
 
 // Slice wraps an append-only slice.
@@ -82,7 +83,7 @@ func Insert[E any](s Slice[E], i int, v ...E) Slice[E] {
 // sort order; it also returns a bool saying whether the target is really found
 // in the slice. The slice must be sorted in increasing order.
 func BinarySearch[E constraints.Ordered](x Slice[E], target E) (int, bool) {
-	return slices.BinarySearch(x.s, target)
+	return expslices.BinarySearch(x.s, target)
 }
 
 // BinarySearchFunc works like BinarySearch, but uses a custom comparison
@@ -91,7 +92,7 @@ func BinarySearch[E constraints.Ordered](x Slice[E], target E) (int, bool) {
 // parameters: 0 if a == b, a negative number if a < b and a positive number if
 // a > b.
 func BinarySearchFunc[E any](x Slice[E], target E, cmp func(E, E) int) (int, bool) {
-	return slices.BinarySearchFunc(x.s, target, cmp)
+	return expslices.BinarySearchFunc(x.s, target, cmp)
 }
 
 // Clip removes unused capacity from the slice, returning s[:len(s):len(s)].
@@ -115,7 +116,7 @@ func Clone[E any](s Slice[E]) []E {
 // The result is 0 if s1 == s2, -1 if s1 < s2, and +1 if s1 > s2.
 // Comparisons involving floating point NaNs are ignored.
 func Compare[E constraints.Ordered](s1, s2 Slice[E]) int {
-	return slices.Compare(s1.s, s2.s)
+	return expslices.Compare(s1.s, s2.s)
 }
 
 // CompareFunc is like Compare but uses a comparison function
@@ -126,7 +127,7 @@ func Compare[E constraints.Ordered](s1, s2 Slice[E]) int {
 // returns 0 the result is 0 if len(s1) == len(s2), -1 if len(s1) < len(s2),
 // and +1 if len(s1) > len(s2).
 func CompareFunc[E1 any, E2 any](s1 Slice[E1], s2 Slice[E2], cmp func(E1, E2) int) int {
-	return slices.CompareFunc(s1.s, s2.s, cmp)
+	return expslices.CompareFunc(s1.s, s2.s, cmp)
 }
 
 // Contains reports whether v is present in s.
@@ -190,11 +191,11 @@ func IndexFunc[E any](s Slice[E], f func(E) bool) int {
 
 // IsSorted reports whether x is sorted in ascending order.
 func IsSorted[E constraints.Ordered](x Slice[E]) bool {
-	return slices.IsSorted(x.s)
+	return expslices.IsSorted(x.s)
 }
 
 // IsSortedFunc reports whether x is sorted in ascending order, with less as the
 // comparison function.
 func IsSortedFunc[E any](x Slice[E], less func(a, b E) bool) bool {
-	return slices.IsSortedFunc(x.s, less)
+	return expslices.IsSortedFunc(x.s, less)
 }
